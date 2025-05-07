@@ -9,8 +9,6 @@ Webflow.push(function () {
 // Run custom JS when the page is ready
 domReady([styleCurrentNavs, hijackAnchorScrolls]);
 
-let headerHeight = 0;
-
 /**
  * DOM ready helper function
  *
@@ -31,9 +29,7 @@ function domReady(callbacks) {
 function getHeaderHeight() {
   const headerHeightString = getComputedStyle(document.documentElement).getPropertyValue('--_layout---header-height');
   console.log('headerHeightString', headerHeightString);
-  if (headerHeightString) {
-    headerHeight = parseInt(headerHeightString);
-  }
+  return headerHeightString ? parseInt(headerHeightString) : 0;
 }
 
 /**
@@ -43,7 +39,7 @@ function getHeaderHeight() {
  */
 function scrollWithOffset(target) {
   console.log('scrolling to', target);
-  const offset = headerHeight;
+  const offset = getHeaderHeight();
   console.log('offset', offset);
   const elementPosition =
     target.getBoundingClientRect().top + window.pageYOffset;
