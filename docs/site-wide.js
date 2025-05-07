@@ -6,6 +6,16 @@ Webflow.push(function () {
   });
 });
 
+// Run custom JS when the page is ready
+domReady([styleCurrentNavs, hijackAnchorScrolls]);
+
+let headerHeight = 0;
+
+/**
+ * DOM ready helper function
+ *
+ * @param callbacks
+ */
 function domReady(callbacks) {
   callbacks.forEach((callback) => {
     if (document.readyState !== 'loading') {
@@ -18,9 +28,23 @@ function domReady(callbacks) {
   });
 }
 
+function getHeaderHeight() {
+  const headerHeightString = getComputedStyle(document.documentElement).getPropertyValue('--_layout---header-height');
+  console.log('headerHeightString', headerHeightString);
+  if (headerHeightString) {
+    headerHeight = parseInt(headerHeightString);
+  }
+}
+
+/**
+ * Scroll to element with offset
+ *
+ * @param target
+ */
 function scrollWithOffset(target) {
   console.log('scrolling to', target);
-  const offset = 120; // header height in px
+  const offset = headerHeight;
+  console.log('offset', offset);
   const elementPosition =
     target.getBoundingClientRect().top + window.pageYOffset;
   const offsetPosition = elementPosition - offset;
@@ -31,6 +55,9 @@ function scrollWithOffset(target) {
   });
 }
 
+/**
+ * Hijack anchor scrolls, so that we can scroll with offset
+ */
 function hijackAnchorScrolls() {
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener('click', function (e) {
@@ -52,6 +79,9 @@ function hijackAnchorScrolls() {
   });
 }
 
+/**
+ * Apply current nav styles
+ */
 function styleCurrentNavs() {
   // Find all with custom attribute
   var navPathEls = document.querySelectorAll('[nav-path]');
@@ -63,8 +93,8 @@ function styleCurrentNavs() {
         el.classList.add('w--current');
       }
     }
-  }
 
+  }
   // Find all nav a and check their href
   var navs = document.querySelectorAll('nav');
   if (navs) {
@@ -89,5 +119,3 @@ function styleCurrentNavs() {
     }
   }
 }
-
-domReady([styleCurrentNavs, hijackAnchorScrolls]);
