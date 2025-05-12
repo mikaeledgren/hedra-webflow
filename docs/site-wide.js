@@ -129,9 +129,10 @@ function calculateReadTime(){
     }
     for (let i = 0; i < viewEls.length; i++) {
       const viewEl = viewEls[i];
-      const textEl = viewEl.querySelector('span');
+      const textEl = viewEl.querySelector('[data-read-time-text]');
       if (!textEl) {
-        console.warn('Unable to display read time: no text element (<span>) found');
+        console.error('Unable to display read time: no text element (<span>) found');
+        return
       }
       let articleEl = articleEls[0];
       if (viewEl.dataset.slug) {
