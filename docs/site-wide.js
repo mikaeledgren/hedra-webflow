@@ -7,7 +7,7 @@ Webflow.push(function () {
 });
 
 // Run custom JS when the page is ready
-domReady([styleCurrentNavs, hijackAnchorScrolls, formatDates]);
+domReady([styleCurrentNavs, hijackAnchorScrolls, formatDates, calculateReadTime]);
 
 /**
  * DOM ready helper function
@@ -117,6 +117,28 @@ function styleCurrentNavs() {
 }
 
 /**
+ * Calculates the read time
+ */
+function calculateReadTime(){
+  const viewEls = document.querySelectorAll('[data-read-time="view"]');
+  if (viewEls) {
+    const articleEl = document.querySelector('[data-read-time="article"]');
+
+    for (let i = 0; i < viewEls.length; i++) {
+      const viewEl = viewEls[i];
+      if(!articleEl){
+        console.warn('No article element found');
+        viewEl.innerText = '';
+        continue;
+      }
+      const content = articleEl.textContent || '';
+      const wordCount = content.trim().split(/\s+/).length;
+      const minutes = Math.max(1, Math.ceil(wordCount / 200));
+      viewEl.innerText = `${minutes} minuter`;
+    }
+  }
+}
+/**
  * Finds all elements with data-custom-format="date" and formats the date
  */
 function formatDates() {
@@ -135,6 +157,12 @@ function formatDates() {
   }
 }
 
+/**
+ * Formats a date string
+ *
+ * @param dateString
+ * @returns {*|string}
+ */
 function formatDateString(dateString) {
   const date = new Date(dateString);
   if (isNaN(date)) return dateString;
