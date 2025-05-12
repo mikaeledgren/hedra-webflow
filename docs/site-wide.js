@@ -135,7 +135,12 @@ function calculateReadTime(){
       }
       let articleEl = articleEls[0];
       if (viewEl.dataset.slug) {
-        articleEl = articleEls.find(el => el.dataset.slug === viewEl.dataset.slug);
+        for(let x = 0; x < articleEls.length; x++){
+          if(articleEls[x].dataset.slug === viewEl.dataset.slug){
+            articleEl = articleEls[x];
+            break;
+          }
+        }
       }
       const content = articleEl.textContent || '';
       const wordCount = content.trim().split(/\s+/).length;
