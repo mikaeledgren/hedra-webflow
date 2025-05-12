@@ -120,21 +120,27 @@ function styleCurrentNavs() {
  * Calculates the read time
  */
 function calculateReadTime(){
-  const viewEls = document.querySelectorAll('[data-read-time="view"]');
+  const viewEls = document.querySelectorAll('[data-read-time-display]');
   if (viewEls) {
-    const articleEl = document.querySelector('[data-read-time="article"]');
-
+    const articleEls = document.querySelectorAll('[data-read-time-source]');
+    if (!articleEls) {
+      viewEls.forEach(el => el.style.display = 'none');
+      return;
+    }
     for (let i = 0; i < viewEls.length; i++) {
       const viewEl = viewEls[i];
-      if(!articleEl){
-        console.warn('No article element found');
-        viewEl.innerText = '';
-        continue;
+      const textEl = viewEl.querySelector('span');
+      if (!textEl) {
+        console.warn('Unable to display read time: no text element (<span>) found');
+      }
+      let articleEl = articleEls[0];
+      if (viewEl.dataset.slug) {
+        articleEl = articleEls.find(el => el.dataset.slug === viewEl.dataset.slug);
       }
       const content = articleEl.textContent || '';
       const wordCount = content.trim().split(/\s+/).length;
       const minutes = Math.max(1, Math.ceil(wordCount / 200));
-      viewEl.innerText = `${minutes} ${minutes === 1 ? 'minuts' : 'minuters'} läsning`;
+      textEl.innerText = `${minutes} ${minutes === 1 ? 'minuts' : 'minuters'} läsning`;
     }
   }
 }
