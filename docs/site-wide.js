@@ -7,7 +7,7 @@ Webflow.push(function () {
 });
 
 // Run custom JS when the page is ready
-domReady([styleCurrentNavs, hijackAnchorScrolls]);
+domReady([styleCurrentNavs, hijackAnchorScrolls, formatDates]);
 
 /**
  * DOM ready helper function
@@ -114,4 +114,33 @@ function styleCurrentNavs() {
       }
     }
   }
+}
+
+/**
+ * Finds all elements with data-custom-format="date" and formats the date
+ */
+function formatDates() {
+  const elements = document.querySelectorAll('[data-custom-format="date"]');
+  if (elements) {
+    for (let i = 0; i < elements.length; i++) {
+      const el = elements[i];
+      let dateString = el.getAttribute('data-date');
+      if(!dateString){
+        dateString = el.textContent;
+      }
+      if (dateString) {
+        el.innerHTML = formatDateString(dateString);
+      }
+    }
+  }
+}
+
+function formatDateString(dateString) {
+  const date = new Date(dateString);
+  if (isNaN(date)) return dateString;
+  return new Intl.DateTimeFormat('sv-SE', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }).format(date);
 }
