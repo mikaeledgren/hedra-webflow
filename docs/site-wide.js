@@ -146,7 +146,7 @@ function calculateReadTime(){
       const content = articleEl.textContent || '';
       const wordCount = content.trim().split(/\s+/).length;
       const minutes = Math.max(1, Math.ceil(wordCount / 200));
-      textEl.innerText = `${minutes} ${minutes === 1 ? 'minuts' : 'minuters'} läsning`;
+      textEl.innerText = `${minutes} min läsning`;
       textEl.style.display = 'block';
     }
   }
