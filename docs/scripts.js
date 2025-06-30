@@ -7,7 +7,13 @@ Webflow.push(function () {
 });
 
 // Run custom JS when the page is ready
-domReady([styleCurrentNavs, hijackAnchorScrolls, formatDates, calculateReadTime]);
+domReady([
+  styleCurrentNavs,
+  hijackAnchorScrolls,
+  formatDates,
+  calculateReadTime,
+  handleSubMenuDropdowns,
+]);
 
 /**
  * DOM ready helper function
@@ -27,7 +33,9 @@ function domReady(callbacks) {
 }
 
 function getHeaderHeight() {
-  const headerHeightString = getComputedStyle(document.documentElement).getPropertyValue('--_layout---header-height');
+  const headerHeightString = getComputedStyle(
+    document.documentElement,
+  ).getPropertyValue('--_layout---header-height');
   console.log('headerHeightString', headerHeightString);
   return headerHeightString ? parseInt(headerHeightString) : 0;
 }
@@ -89,7 +97,6 @@ function styleCurrentNavs() {
         el.classList.add('w--current');
       }
     }
-
   }
   // Find all nav a and check their href
   var navs = document.querySelectorAll('nav');
@@ -119,25 +126,27 @@ function styleCurrentNavs() {
 /**
  * Calculates the read time
  */
-function calculateReadTime(){
+function calculateReadTime() {
   const viewEls = document.querySelectorAll('[data-read-time-display]');
   if (viewEls) {
     const articleEls = document.querySelectorAll('[data-read-time-source]');
     if (!articleEls) {
-      viewEls.forEach(el => el.style.display = 'none');
+      viewEls.forEach((el) => (el.style.display = 'none'));
       return;
     }
     for (let i = 0; i < viewEls.length; i++) {
       const viewEl = viewEls[i];
       const textEl = viewEl.querySelector('[data-read-time-text]');
       if (!textEl) {
-        console.error('Unable to display read time: no text element (<span>) found');
-        return
+        console.error(
+          'Unable to display read time: no text element (<span>) found',
+        );
+        return;
       }
       let articleEl = articleEls[0];
       if (viewEl.dataset.slug) {
-        for(let x = 0; x < articleEls.length; x++){
-          if(articleEls[x].dataset.slug === viewEl.dataset.slug){
+        for (let x = 0; x < articleEls.length; x++) {
+          if (articleEls[x].dataset.slug === viewEl.dataset.slug) {
             articleEl = articleEls[x];
             break;
           }
@@ -160,7 +169,7 @@ function formatDates() {
     for (let i = 0; i < elements.length; i++) {
       const el = elements[i];
       let dateString = el.getAttribute('data-date');
-      if(!dateString){
+      if (!dateString) {
         dateString = el.textContent;
       }
       if (dateString) {
@@ -184,4 +193,41 @@ function formatDateString(dateString) {
     month: 'short',
     year: 'numeric',
   }).format(date);
+}
+
+/**
+ * Handle sub menu dropdowns
+ * Opens on hover and stays open if any of its or its parent's page is the current
+ */
+function handleSubMenuDropdowns() {
+  const dropdowns = document.querySelectorAll('.nav-submenu-dropdown');
+
+  dropdowns.forEach((dropdown) => {
+    // Find the menu
+    const menu = dropdown.querySelector('.nav-submenu-dropdown_menu');
+    if (!menu) {
+      console.warn('No menu found for submenu dropdown', dropdown);
+      return;
+    }
+
+    // Check if the dropdown is or has the current page
+    const isCurrent =
+      dropdown.classList.contains('w--current') ||
+      !!dropdown.querySelector('.w--current');
+    if (isCurrent) {
+      // Add the open class and let it stay open
+      menu.classList.add('open');
+      return;
+    }
+
+    // Show on hover
+    dropdown.addEventListener('mouseover', () => {
+      menu.classList.add('open');
+    });
+
+    // Hide on blur
+    dropdown.addEventListener('mouseout', () => {
+      menu.classList.remove('open');
+    });
+  });
 }
