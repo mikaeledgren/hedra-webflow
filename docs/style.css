@@ -1,3 +1,13 @@
-a.w--current h3, a.w--current p {
-    font-weight: 500;
+a.w--current h3,
+a.w--current p {
+  font-weight: 500;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
 }
