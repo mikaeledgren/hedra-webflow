@@ -6,7 +6,7 @@ domReady([
   formatDates,
   calculateReadTime,
   handleSubMenuDropdowns,
-  oneSecondLater(styleCurrentAnchors),
+  oneSecondLater([styleCurrentAnchors]),
 ]);
 
 /**
