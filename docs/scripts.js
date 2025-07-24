@@ -46,13 +46,10 @@ function getHeaderHeight() {
  * @param target
  */
 function scrollWithOffset(target) {
-  console.log('scrolling to', target);
   const offset = getHeaderHeight();
-  console.log('offset', offset);
   const elementPosition =
     target.getBoundingClientRect().top + window.pageYOffset;
   const offsetPosition = elementPosition - offset;
-  console.log('scroll position', offsetPosition);
   window.scrollTo({
     top: offsetPosition,
     behavior: 'smooth',
@@ -65,7 +62,6 @@ function scrollWithOffset(target) {
 function hijackAnchorScrolls() {
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener('click', function (e) {
-      console.log('clicked!');
       const target = document.querySelector(this.getAttribute('href'));
       if (target) {
         e.preventDefault();
@@ -91,6 +87,8 @@ function styleCurrentAnchors() {
   const els = document.querySelectorAll('a');
   const pathname = window.location.pathname;
 
+  console.log('pathname', pathname);
+
   if (els) {
     const subMenuEls = [];
 
@@ -113,8 +111,8 @@ function styleCurrentAnchors() {
     if (subMenuEls.length > 0) {
       // Only one can be the current within a submenu – pick the one with most matches
       const pathnameParts = pathname.split('/');
-      const mostMatches = 0;
-      const mostMatchedEl;
+      let mostMatches = 0;
+      let mostMatchedEl;
 
       for (let i = 0; i < subMenuEls.length; i++) {
         const subMenuEl = subMenuEls[i];
