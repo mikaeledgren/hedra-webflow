@@ -6,7 +6,7 @@ domReady([
   formatDates,
   calculateReadTime,
   handleSubMenuDropdowns,
-  oneSecondLater([styleCurrentAnchors]),
+  halfASecondLater([styleCurrentAnchors]),
 ]);
 
 /**
@@ -27,12 +27,12 @@ function domReady(callbacks) {
 }
 
 /**
- * Calls provided functions with a 1 second delay
+ * Calls provided functions with a 500 ms  delay
  *
  * @param callbacks
  * @returns {(function(): void)|*}
  */
-function oneSecondLater(callbacks) {
+function halfASecondLater(callbacks) {
   return function () {
     callbacks.forEach((callback) =>
       setTimeout(function () {
@@ -109,6 +109,9 @@ function styleCurrentAnchors() {
 
   console.log('pathname', pathname);
 
+  // Skip home path
+  if (pathname === '/') return;
+
   if (els) {
     const subMenuEls = [];
 
@@ -116,12 +119,22 @@ function styleCurrentAnchors() {
       const el = els[i];
       const isSubMenu = el.closest('.subnav');
 
+      // Sub menu anchors have special treatment
       if (isSubMenu) {
         subMenuEls.push(el);
         continue;
       }
 
       const href = el.getAttribute('href');
+
+      // Home href requires exact match, will match all otherwise
+      if (pathname === '/') {
+        if (href === '/') {
+          setAnchorAsCurrent(el);
+          continue;
+        }
+      }
+
       console.log('href', href, pathname.includes(href));
       if (href && pathname.includes(href)) {
         setAnchorAsCurrent(el);
@@ -160,6 +173,11 @@ function styleCurrentAnchors() {
   }
 }
 
+/**
+ * Adds classes for current styling
+ *
+ * @param el
+ */
 function setAnchorAsCurrent(el) {
   el.classList.add('w--current');
 
@@ -172,10 +190,11 @@ function setAnchorAsCurrent(el) {
   }
 
   // Also handle dropdown buttons (they're not anchors so need special treatment)
-  const parentNavLink = el.closest('.nav_link');
-  console.log('parentNavLink?', el.href, !!parentNavLink);
-  if (parentNavLink) {
-    parentNavLink.classList.add('w--current');
+  const parentNavLinkEl = el.closest('.nav_link');
+  console.log('parentNavLink?', el.getAttribute('href'), !!parentNavLinkEl);
+  if (parentNavLinkEl) {
+    console.log('Adding w--current to parent', parentNavLinkEl);
+    parentNavLinkEl.classList.add('w--current');
   }
 }
 
