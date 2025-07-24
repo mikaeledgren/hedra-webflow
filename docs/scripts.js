@@ -37,7 +37,7 @@ function halfASecondLater(callbacks) {
     callbacks.forEach((callback) =>
       setTimeout(function () {
         callback();
-      }, 1000),
+      }, 500),
     );
   };
 }
@@ -190,7 +190,7 @@ function setAnchorAsCurrent(el) {
   }
 
   // Also handle dropdown buttons (they're not anchors so need special treatment)
-  const parentNavLinkEl = el.closest('.nav_link');
+  const parentNavLinkEl = el.closest('div.nav_link, span.nav_link');
   console.log('parentNavLink?', el.getAttribute('href'), !!parentNavLinkEl);
   if (parentNavLinkEl) {
     console.log('Adding w--current to parent', parentNavLinkEl);
