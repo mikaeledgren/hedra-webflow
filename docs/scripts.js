@@ -1,5 +1,5 @@
 // Disable Webflow's built-in smooth scrolling
-var Webflow = Webflow || [];
+const Webflow = Webflow || [];
 Webflow.push(function () {
   $(function () {
     $(document).off('click.wf-scroll');
@@ -8,7 +8,7 @@ Webflow.push(function () {
 
 // Run custom JS when the page is ready
 domReady([
-  styleCurrentNavs,
+  styleCurrentAnchors,
   hijackAnchorScrolls,
   formatDates,
   calculateReadTime,
@@ -86,39 +86,64 @@ function hijackAnchorScrolls() {
 /**
  * Apply current nav styles
  */
-function styleCurrentNavs() {
-  // Find all with custom attribute
-  var navPathEls = document.querySelectorAll('[nav-path]');
-  if (navPathEls) {
-    for (let i = 0; i < navPathEls.length; i++) {
-      var el = navPathEls[i];
-      var navPath = el.getAttribute('nav-path');
-      if (navPath && window.location.pathname.includes(navPath)) {
-        el.classList.add('w--current');
+function styleCurrentAnchors() {
+  // Find all anchors with custom attribute
+  const els = document.querySelectorAll('a');
+  const pathname = window.location.pathname;
+
+  if (els) {
+    const subMenuEls = [];
+
+    for (let i = 0; i < els.length; i++) {
+      const el = els[i];
+      const isSubMenu = el.closest('.subnav');
+
+      if (isSubMenu) {
+        subMenuEls.push(el);
+        continue;
+      }
+
+      const href = el.getAttribute('href');
+
+      if (href && pathname.includes(href)) {
+        setAnchorAsCurrent(el);
       }
     }
-  }
-  // Find all nav a and check their href
-  var navs = document.querySelectorAll('nav');
-  if (navs) {
-    for (let i = 0; i < navs.length; i++) {
-      var nav = navs[i];
-      var anchors = nav.querySelectorAll('a');
-      if (anchors) {
-        for (let j = 0; j < anchors.length; j++) {
-          var anchor = anchors[j];
-          if (window.location.href.includes(anchor.href)) {
-            anchor.classList.add('w--current');
-            var children = anchor.children;
-            if (children) {
-              for (let x = 0; x < children.length; x++) {
-                const child = children[x];
-                child.classList.add('text-black');
-              }
-            }
+
+    if (subMenuEls.length > 0) {
+      // Only one can be the current within a submenu – pick the one with most matches
+      const pathnameParts = pathname.split('/');
+      const mostMatches = 0;
+      const mostMatchedEl;
+
+      for (let i = 0; i < subMenuEls.length; i++) {
+        const subMenuEl = subMenuEls[i];
+        const subMenuPathname = subMenuEl.getAttribute('href');
+        const subMenuPathnameParts = subMenuPathname.split('/');
+        let matches = 0;
+        for (let x = 0; x < pathnameParts.length; x++) {
+          if (pathnameParts[x] === subMenuPathnameParts[x]) {
+            matches++;
           }
         }
+        if (matches > mostMatches) {
+          mostMatches = matches;
+          mostMatchedEl = subMenuEl;
+        }
       }
+    }
+    if (mostMatchedEl) setAnchorAsCurrent(mostMatchedEl);
+  }
+}
+
+function setAnchorAsCurrent(el) {
+  el.classList.add('w--current');
+
+  const children = el.children;
+  if (children) {
+    for (let x = 0; x < children.length; x++) {
+      const child = children[x];
+      child.classList.add('text-black');
     }
   }
 }
