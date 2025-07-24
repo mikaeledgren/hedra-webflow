@@ -132,8 +132,8 @@ function styleCurrentAnchors() {
           mostMatchedEl = subMenuEl;
         }
       }
+      if (mostMatchedEl) setAnchorAsCurrent(mostMatchedEl);
     }
-    if (mostMatchedEl) setAnchorAsCurrent(mostMatchedEl);
   }
 }
 
