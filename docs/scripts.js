@@ -155,7 +155,7 @@ function setAnchorAsCurrent(el) {
   }
 
   // Also handle dropdown buttons (they're not anchors so need special treatment)
-  const parentNavLink = el.closest('.nav-link');
+  const parentNavLink = el.closest('.nav_link');
   if (parentNavLink) {
     parentNavLink.classList.add('w--current');
   }
