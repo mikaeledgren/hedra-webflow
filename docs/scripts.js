@@ -182,7 +182,7 @@ function setAnchorAsCurrent(el) {
   }
 
   // Also handle dropdown buttons (they're not anchors so need special treatment)
-  const parentDropdownEl = el.closest('div.nav_dropdown');
+  const parentDropdownEl = el.closest('div.nav-dropdown');
   console.log('parentDropdown?', el.getAttribute('href'), !!parentDropdownEl);
   if (parentDropdownEl) {
     const navLinkEl = parentDropdownEl.querySelector('.nav_link');
