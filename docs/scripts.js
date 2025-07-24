@@ -6,6 +6,7 @@ domReady([
   formatDates,
   calculateReadTime,
   handleSubMenuDropdowns,
+  oneSecondLater(styleCurrentAnchors),
 ]);
 
 /**
@@ -23,6 +24,22 @@ function domReady(callbacks) {
       });
     }
   });
+}
+
+/**
+ * Calls provided functions with a 1 second delay
+ *
+ * @param callbacks
+ * @returns {(function(): void)|*}
+ */
+function oneSecondLater(callbacks) {
+  return function () {
+    callbacks.forEach((callback) =>
+      setTimeout(function () {
+        callback();
+      }, 1000),
+    );
+  };
 }
 
 // Disable Webflow's built-in smooth scrolling
