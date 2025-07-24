@@ -105,12 +105,16 @@ function styleCurrentAnchors() {
       }
 
       const href = el.getAttribute('href');
-
+      console.log('href', href, pathname.includes(href));
       if (href && pathname.includes(href)) {
         setAnchorAsCurrent(el);
       }
     }
 
+    console.log(
+      'subMenuEls',
+      subMenuEls.map((el) => el.getAttribute('href')),
+    );
     if (subMenuEls.length > 0) {
       // Only one can be the current within a submenu – pick the one with most matches
       const pathnameParts = pathname.split('/');
@@ -132,6 +136,8 @@ function styleCurrentAnchors() {
           mostMatchedEl = subMenuEl;
         }
       }
+
+      console.log('mostMatchedEl', mostMatchedEl?.getAttribute('href'));
       if (mostMatchedEl) setAnchorAsCurrent(mostMatchedEl);
     }
   }
@@ -146,6 +152,12 @@ function setAnchorAsCurrent(el) {
       const child = children[x];
       child.classList.add('text-black');
     }
+  }
+
+  // Also handle dropdown buttons (they're not anchors so need special treatment)
+  const parentNavLink = el.closest('.nav-link');
+  if (parentNavLink) {
+    parentNavLink.classList.add('w--current');
   }
 }
 
