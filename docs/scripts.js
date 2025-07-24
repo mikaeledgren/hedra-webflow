@@ -1,13 +1,6 @@
-// Disable Webflow's built-in smooth scrolling
-const Webflow = Webflow || [];
-Webflow.push(function () {
-  $(function () {
-    $(document).off('click.wf-scroll');
-  });
-});
-
 // Run custom JS when the page is ready
 domReady([
+  disableWebflowSmoothScrolling,
   styleCurrentAnchors,
   hijackAnchorScrolls,
   formatDates,
@@ -29,6 +22,16 @@ function domReady(callbacks) {
         passive: true,
       });
     }
+  });
+}
+
+// Disable Webflow's built-in smooth scrolling
+function disableWebflowSmoothScrolling() {
+  const wf = Webflow || [];
+  wf.push(function () {
+    $(function () {
+      $(document).off('click.wf-scroll');
+    });
   });
 }
 
