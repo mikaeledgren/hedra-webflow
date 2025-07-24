@@ -6,7 +6,7 @@ domReady([
   formatDates,
   calculateReadTime,
   handleSubMenuDropdowns,
-  halfASecondLater([styleCurrentAnchors]),
+  later([styleCurrentAnchors]),
 ]);
 
 /**
@@ -27,17 +27,17 @@ function domReady(callbacks) {
 }
 
 /**
- * Calls provided functions with a 500 ms  delay
+ * Calls provided functions with a delay
  *
  * @param callbacks
  * @returns {(function(): void)|*}
  */
-function halfASecondLater(callbacks) {
+function later(callbacks) {
   return function () {
     callbacks.forEach((callback) =>
       setTimeout(function () {
         callback();
-      }, 500),
+      }, 100),
     );
   };
 }
@@ -56,7 +56,6 @@ function getHeaderHeight() {
   const headerHeightString = getComputedStyle(
     document.documentElement,
   ).getPropertyValue('--_layout---header-height');
-  console.log('headerHeightString', headerHeightString);
   return headerHeightString ? parseInt(headerHeightString) : 0;
 }
 
@@ -183,11 +182,9 @@ function setAnchorAsCurrent(el) {
 
   // Also handle dropdown buttons (they're not anchors so need special treatment)
   const parentDropdownEl = el.closest('div.nav-dropdown');
-  console.log('parentDropdown?', el.getAttribute('href'), !!parentDropdownEl);
   if (parentDropdownEl) {
     const navLinkEl = parentDropdownEl.querySelector('.nav_link');
     if (navLinkEl) {
-      console.log('Adding w--current to dropdown', navLinkEl);
       navLinkEl.classList.add('w--current');
     } else {
       console.warn('No nav_link found for dropdown', parentDropdownEl);
