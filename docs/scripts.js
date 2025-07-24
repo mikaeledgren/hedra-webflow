@@ -107,8 +107,6 @@ function styleCurrentAnchors() {
   const els = document.querySelectorAll('a');
   const pathname = window.location.pathname;
 
-  console.log('pathname', pathname);
-
   // Skip home path
   if (pathname === '/') return;
 
@@ -135,16 +133,11 @@ function styleCurrentAnchors() {
         }
       }
 
-      console.log('href', href, pathname.includes(href));
       if (href && pathname.includes(href)) {
         setAnchorAsCurrent(el);
       }
     }
 
-    console.log(
-      'subMenuEls',
-      subMenuEls.map((el) => el.getAttribute('href')),
-    );
     if (subMenuEls.length > 0) {
       // Only one can be the current within a submenu – pick the one with most matches
       const pathnameParts = pathname.split('/');
@@ -167,7 +160,6 @@ function styleCurrentAnchors() {
         }
       }
 
-      console.log('mostMatchedEl', mostMatchedEl?.getAttribute('href'));
       if (mostMatchedEl) setAnchorAsCurrent(mostMatchedEl);
     }
   }
@@ -190,11 +182,16 @@ function setAnchorAsCurrent(el) {
   }
 
   // Also handle dropdown buttons (they're not anchors so need special treatment)
-  const parentNavLinkEl = el.closest('div.nav_link, span.nav_link');
-  console.log('parentNavLink?', el.getAttribute('href'), !!parentNavLinkEl);
-  if (parentNavLinkEl) {
-    console.log('Adding w--current to parent', parentNavLinkEl);
-    parentNavLinkEl.classList.add('w--current');
+  const parentDropdownEl = el.closest('div.nav_dropdown');
+  console.log('parentDropdown?', el.getAttribute('href'), !!parentDropdownEl);
+  if (parentDropdownEl) {
+    const navLinkEl = parentDropdownEl.querySelector('.nav_link');
+    if (navLinkEl) {
+      console.log('Adding w--current to dropdown', navLinkEl);
+      navLinkEl.classList.add('w--current');
+    } else {
+      console.warn('No nav_link found for dropdown', parentDropdownEl);
+    }
   }
 }
 
