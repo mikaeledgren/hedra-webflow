@@ -6,6 +6,7 @@ domReady([
   formatDates,
   calculateReadTime,
   handleSubMenuDropdowns,
+  showCookieBanner,
   later([styleCurrentAnchors]),
 ]);
 
@@ -298,5 +299,26 @@ function handleSubMenuDropdowns() {
     dropdown.addEventListener('mouseout', () => {
       menu.classList.remove('open');
     });
+  });
+}
+
+/**
+ * Simplified cookie banner
+ */
+function showCookieBanner() {
+  const banner = document.querySelector('#cookie-banner');
+  const acceptBtn = banner.querySelector('button');
+
+  if (!banner || !acceptBtn) return;
+
+  const hasAcceptedCookies = localStorage.getItem('cookiesAccepted') === 'true';
+
+  if (!hasAcceptedCookies) {
+    banner.style.display = 'block';
+  }
+
+  acceptBtn.addEventListener('click', function () {
+    localStorage.setItem('cookiesAccepted', 'true');
+    banner.style.display = 'none';
   });
 }
