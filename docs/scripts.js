@@ -309,7 +309,7 @@ function handleSubMenuDropdowns() {
  */
 function showCookieBanner() {
   const banner = document.querySelector('#cookie-banner');
-  const acceptBtn = banner.querySelector('#cookie-accept-btn');
+  const acceptBtn = banner.querySelector('#cookie-button');
 
   if (!banner || !acceptBtn) return;
 
